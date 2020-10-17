@@ -34,11 +34,8 @@ class Application:
 			path = f'{path}/'
 			
 		method = environ['REQUEST_METHOD']
-		print(f'method - {method}')
 		data = self.get_wsgi_input_data(environ)
-		print(f'data_1 - {data}')
 		data = self.parse_wsgi_input_data(data)
-		print(f'data_2 - {data}')
 		
 		query_string = environ['QUERY_STRING']
 		request_params = self.parse_input_data(query_string)
@@ -51,11 +48,8 @@ class Application:
 			view = self.urlpatterns[path]
 			request = {}
 			request['method'] = method
-			print(request)
 			request['data'] = data
-			print(request)
 			request['request_params'] = request_params
-			print(request)
 		# добавляем в запрос данные из front controllers
 		for front in self.front_controller:
 			front(request)

@@ -2,6 +2,9 @@ import views
 
 urlpatterns = {
 	'/': views.Main(),
-	'/other/': views.Other(),
+	'/category/': views.CategoriesList(),
 	'/contact/': views.Contact(),
+	'/create-category/': views.CreateCategory(),
+	'/create-course/': views.CreateCourse(),
+	'/copy-course/' :  views.copy_course,
 }
