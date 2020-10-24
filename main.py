@@ -1,6 +1,6 @@
 
 from urls import urlpatterns
-from core.wsgi import Application
+from core.wsgi import Application, FakeApplication, DebugApplication
 
 
 # Front controllers
@@ -10,4 +10,6 @@ def secret_front(request):
 
 front_controller = [secret_front]
 
-application = Application(urlpatterns, front_controller)
+#application = Application(urlpatterns, front_controller)
+#application = DebugApplication(urlpatterns, front_controller)
+application = FakeApplication(urlpatterns, front_controller)

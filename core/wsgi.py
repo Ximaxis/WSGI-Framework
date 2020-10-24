@@ -41,7 +41,7 @@ class Application:
 		request_params = self.parse_input_data(query_string)
 
 		# Если нет такой вьюхи отправляет 404
-		view = NotFound404View()
+		
 
 		if path in self.urlpatterns:
 			# получаем view по url
@@ -50,12 +50,39 @@ class Application:
 			request['method'] = method
 			request['data'] = data
 			request['request_params'] = request_params
-		# добавляем в запрос данные из front controllers
-		for front in self.front_controller:
-			front(request)
-		# вызываем view, получаем результат
-		code, body = view(request)
-		# возвращаем заголовки
-		start_response(code, [('Content-Type', 'text/html')])
-		# возвращаем тело ответа
-		return [body.encode('utf-8')]
+			# добавляем в запрос данные из front controllers
+			for front in self.front_controller:
+				front(request)
+			# вызываем view, получаем результат
+			code, body = view(request)
+			
+			start_response(code, [('Content-Type', 'text/html')])
+			return [body.encode('utf-8')]
+		else:
+            # Если url нет в urlpatterns - то страница не найдена
+			start_response('404 NOT FOUND', [('Content-Type', 'text/html')])
+			return NotFound404View
+
+
+class DebugApplication(Application):
+
+    def __init__(self, urlpatterns, front_controllers):
+        self.application = Application(urlpatterns, front_controllers)
+        super().__init__(urlpatterns, front_controllers)
+
+    def __call__(self, env, start_response):
+        print('DEBUG MODE')
+        print(env)
+        return self.application(env, start_response)
+        # super().__call__(env, start_response)
+
+
+class FakeApplication(Application):
+
+    def __init__(self, urlpatterns, front_controllers):
+        self.application = Application(urlpatterns, front_controllers)
+        super().__init__(urlpatterns, front_controllers)
+
+    def __call__(self, env, start_response):
+        start_response('200 OK', [('Content-Type', 'text/html')])
+        return [b'Hello from Fake']

@@ -1,18 +1,21 @@
+from logging import Logger, debug
 from core.templator import render
 from datetime import date
 from models import TrainingSite
 
 site = TrainingSite()
+logger = Logger('views')
 
 class NotFound404View:
 	def __call__(self, request):
-		content = '<h1>404 PAGE Not Found</h1>'
+		content = [b'<h1>404 PAGE Not Found</h1>']
 		return '404 WHAT', content	
 
 
 class CategoriesList:
 	
 	def __call__(self, request):
+		
 		content = render('other.html',
 		title = "Список категорий", 
 		objects=site.courses, 
@@ -59,23 +62,25 @@ class CreateCourse:
 			categories = site.categories
 			return '200 OK', render('create.html', categories=categories)
 
-
+@debug
 def copy_course(request):
-    request_params = request['request_params']
-    name = request_params['name']
-    old_course = site.get_course(name)
-    if old_course:
-        new_name = f'copy_{name}'
-        new_course = old_course.clone()
-        new_course.name = new_name
-        site.courses.append(new_course)
+	
+	request_params = request['request_params']
+	name = request_params['name']
+	old_course = site.get_course(name)
+	if old_course:
+			new_name = f'copy_{name}'
+			new_course = old_course.clone()
+			new_course.name = new_name
+			site.courses.append(new_course)
 
-    return '200 OK', render('other.html', objects=site.courses)
+	return '200 OK', render('other.html', objects=site.courses)
 
 
 class Contact:
 	
 	def __call__(self, request):
+		logger.log('Контакты')
 		if request['method'] == 'POST':
 			data = request['data']
 			with open('text.txt', 'w') as file:
