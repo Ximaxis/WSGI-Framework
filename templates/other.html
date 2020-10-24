@@ -1,0 +1,29 @@
+{% extends 'base_template.html' %}
+
+{% block content %}
+<div class="container ftco-cart">
+    <div class="col-md-12 text-center">
+        <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading">Список категорий</h4> <h6>Добавить<a href="/create-category/">+</a> <a href="/create-course/">*</a> </h6>
+            <p><ul>
+
+                {% for item in objects_list %}
+                <li>
+                    {{item.name}} <span>Количество курсов: {{item.course_count()}}</span>
+                </li>
+                {% endfor %}
+
+            </ul>
+       
+        <ul>
+        {% for item in objects %}
+    <li>
+        {{item.name}} <span><a href="/copy-course/?name={{item.name}}">скопировать</a></span>
+    </li>
+    {% endfor %}
+</ul>
+</p>
+          </div>
+    </div> 
+</div> 
+{% endblock %}
